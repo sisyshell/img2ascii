@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ASCII Image Generator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="img2ascii.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default" style="border-radius: 0px;">
+        <div class="container-fluid">
+            <div class="navbar-header" style="position: relative; width: 100%;">
+                <a class="navbar-brand" style="color: cadetblue;" href="#">
+					<i>
+						<strong>img</strong><strong>2</strong><strong>ascii</strong> <strong>C</strong>oventer
+					</i>
+				</a>
+            </div>
+        </div>
+    </nav>
+    <div class="body-container">
+        <div class="dropzone" id="dropzone">
+            <input type="file" class="fileselect"> Drag and drop your image here (^_^)
+		</div> 
+	<div class="inputs">
+		<div class="input-group">
+			<span class="input-group-addon">Width</span>
+			<input id="width" type="text" class="form-control" value="auto">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon">Height</span>
+			<input id="height" type="text" class="form-control" value="auto">
+		</div>
+	</div>
+	<button class="btn" onclick="convert();" style="width: 100%; margin-bottom: 10px;">Convert</button>
+	
+    <pre id="output">Output Area</pre>
+	</div>
+	
+    <script>
+		var imageFile;
+		
+		function convert(){
+			new img2ascii({
+        				output: document.getElementById('output'),
+        				imgPath: imageFile,
+        				width: document.getElementById('width').value,
+        				height: document.getElementById('height').value 
+			});
+		}
+	
+        window.addEventListener('load', function() {
+        	document.querySelector('input[type="file"]').addEventListener('change', function(event) {
+				var reader = new FileReader();
+        		reader.onload = function(){
+        			imageFile = reader.result;
+        		}
+        		reader.readAsDataURL(event.target.files[0]);
+        	});
+        });
+        	
+	
+		var dropzone = document.getElementById('dropzone');
+	
+		dropzone.ondrop = function (e) {
+			e.preventDefault();
+			this.className = 'dropzone';
+			console.log(e.dataTransfer.files);
+			var reader = new FileReader();
+			reader.onload = function(){
+				var gen = new img2ascii({
+					output: document.getElementById('output'),
+					imgPath: reader.result,
+					width: 'auto',
+					height: 'auto', 
+				});
+			}
+			reader.readAsDataURL(e.dataTransfer.files[0]);
+		};
+	
+		dropzone.ondragover = function () {
+			this.className = 'dropzone dragover';
+			return false;
+		};
+	
+		dropzone.ondragleave = function () {
+			this.className = 'dropzone';
+			return false;
+		};
+    </script>
+</body>
+
+</html>
